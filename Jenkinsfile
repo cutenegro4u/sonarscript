@@ -8,7 +8,7 @@ pipeline {
 
 stage("Checkout from SCM") {
             steps {
-                git branch: 'main', credentialsId: 'Github-Cred-New', url: '...'
+                git branch: 'main', credentialsId: 'Github-Cred-New', url: 'https://github.com/cutenegro4u/sonarscript.git'
             }
         }
 
