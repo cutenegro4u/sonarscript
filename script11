@@ -1,0 +1,21 @@
+def startSonarQube() {
+    // Customize these variables with your SonarQube server details
+    def sonarQubeUrl = 'http://18.117.73.46:9000'
+    def sonarQubeUser = 'admin'
+    def sonarQubePassword = 'admin'
+
+    // Login to SonarQube and fetch the authentication token
+    def loginResponse = sh(script: "curl -X POST -u ${sonarQubeUser}:${sonarQubePassword} ${sonarQubeUrl}/api/authentication/login", returnStdout: true)
+    def token = loginResponse.replaceAll('"', '').trim()
+
+    // Start SonarQube
+    sh "curl -X POST -H 'Authorization: Bearer ${token}' ${sonarQubeUrl}/api/system/start"
+
+    // Get SonarQube status
+    def statusResponse = sh(script: "curl -s -u ${sonarQubeUser}:${sonarQubePassword} ${sonarQubeUrl}/api/system/status | jq -r '.status'", returnStdout: true)
+    echo "SonarQube Status: ${statusResponse}"
+
+    // Get SonarQube version
+    def versionResponse = sh(script: "curl -s -u ${sonarQubeUser}:${sonarQubePassword} ${sonarQubeUrl}/api/server/version | jq -r '.version'", returnStdout: true)
+    echo "SonarQube Version: ${versionResponse}"
+}
